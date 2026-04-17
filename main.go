@@ -1,7 +1,8 @@
 package main
 
-import "fmt"
+import "github.com/Lunarisnia/chip-8/emulator"
 
 func main() {
-	fmt.Println("Hello, World")
+	chip8 := emulator.New()
+	chip8.Init()
 }
