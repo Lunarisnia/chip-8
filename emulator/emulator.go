@@ -51,7 +51,8 @@ func (c *Chip8) LoadROM(romPath string) error {
 
 func (c *Chip8) Run() {
 	for i := START_ADDR; i < 4096/2; i++ {
-		c.fetch()
+		opcode := c.fetch()
+		c.decode(opcode)
 	}
 }
 
@@ -62,6 +63,10 @@ func (c *Chip8) fetch() uint16 {
 	var instruction uint16
 	instruction = uint16(rawInstructions[0])<<8 | uint16(rawInstructions[1])
 	return instruction
+}
+
+func (c *Chip8) decode(opcode uint16) {
+	// TODO: Parse the fetched opcode
 }
 
 func (c *Chip8) initFonts() {
