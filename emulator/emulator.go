@@ -7,18 +7,23 @@ import (
 
 type Chip8 struct {
 	Memory        [4096]byte
+	Stack         memory.Stack
+	DisplayBuffer [2048]bool
+	Registers     [16]byte
+	DelayTimer    byte
+	SoundTimer    byte
 	PC            uint16 // Program Counter
 	IR            uint16 // Index
-	DisplayBuffer [2048]bool
-	Stack         memory.Stack
 }
 
 func New() *Chip8 {
 	return &Chip8{
-		Memory: [4096]byte{},
-		PC:     0,
-		IR:     0,
-		Stack:  memory.NewStack(),
+		Memory:        [4096]byte{},
+		Stack:         memory.NewStack(),
+		DisplayBuffer: [2048]bool{},
+		Registers:     [16]byte{},
+		PC:            0,
+		IR:            0,
 	}
 }
 
