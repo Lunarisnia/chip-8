@@ -110,3 +110,7 @@ func (c *Chip8) initFonts() {
 		}
 	}
 }
+
+func (c *Chip8) DisplayResolution() (int, int) {
+	return 64, 32
+}

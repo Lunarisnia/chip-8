@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowSize(640, 320)
 	ebiten.SetWindowTitle("CHIP-8")
 	if err := ebiten.RunGame(gameEngine); err != nil {
 		log.Fatal(err)
