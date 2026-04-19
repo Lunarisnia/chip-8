@@ -1,9 +1,9 @@
 package emulator
 
 import (
-	"github.com/Lunarisnia/chip-8/file"
+	"github.com/Lunarisnia/chip-8/internal/file"
 	"github.com/Lunarisnia/chip-8/internal/font"
-	"github.com/Lunarisnia/chip-8/memory"
+	"github.com/Lunarisnia/chip-8/internal/memory"
 )
 
 const START_ADDR = 0x200

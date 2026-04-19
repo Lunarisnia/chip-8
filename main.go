@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Lunarisnia/chip-8/emulator"
+	"github.com/Lunarisnia/chip-8/internal/emulator"
 )
 
 func main() {
