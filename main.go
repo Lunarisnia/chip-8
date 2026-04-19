@@ -3,16 +3,18 @@ package main
 import (
 	"log"
 
-	"github.com/Lunarisnia/chip-8/internal/emulator"
+	"github.com/Lunarisnia/chip-8/internal/engine"
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 func main() {
-	chip8 := emulator.New()
-	chip8.Init()
-	err := chip8.LoadROM("./testroms/IBM-logo.ch8")
+	gameEngine, err := engine.NewEngine()
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	chip8.Run()
+	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowTitle("CHIP-8")
+	if err := ebiten.RunGame(gameEngine); err != nil {
+		log.Fatal(err)
+	}
 }

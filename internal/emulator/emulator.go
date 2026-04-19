@@ -49,11 +49,9 @@ func (c *Chip8) LoadROM(romPath string) error {
 	return nil
 }
 
-func (c *Chip8) Run() {
-	for i := START_ADDR; i < 4096/2; i++ {
-		opcode := c.fetch()
-		c.decode(opcode)
-	}
+func (c *Chip8) Step() {
+	opcode := c.fetch()
+	c.decode(opcode)
 }
 
 func (c *Chip8) fetch() uint16 {
