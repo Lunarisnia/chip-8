@@ -66,6 +66,40 @@ func (c *Chip8) fetch() uint16 {
 }
 
 func (c *Chip8) decode(opcode uint16) {
+	firstNibble := opcode & 0xF000
+
+	switch firstNibble >> 12 {
+	case 0x0:
+		code := opcode & 0x0FFF
+		if code == 0x0E0 {
+			c.DisplayBuffer = [2048]bool{}
+		}
+	case 0x1: // Jump
+		jumpAddr := opcode & 0x0FFF
+		c.PC = jumpAddr
+		// fmt.Printf("%d", jumpAddr)
+	case 0x6: // Set Register VX
+		xAddr := opcode & 0x0F00 >> 8
+		xValue := byte(opcode & 0x00FF)
+		// fmt.Printf("Addr: %v\nXValue: %v\nAddrBin: %016b\n", xAddr, xValue, xAddr)
+		c.Registers[xAddr] = xValue
+	case 0x7:
+		xAddr := opcode & 0x0F00 >> 8
+		xValue := byte(opcode & 0x00FF)
+		c.Registers[xAddr] += xValue
+	case 0xA:
+		indexAddr := opcode & 0x0FFF
+		c.IR = indexAddr
+	case 0xD:
+		xAddr := opcode & 0x0F00 >> 8
+		yAddr := opcode & 0x00F0 >> 4
+
+		xCoord := c.Registers[xAddr]
+		yCoord := c.Registers[yAddr]
+		value := byte(opcode & 0x000F)
+		_, _, _ = xCoord, yCoord, value
+	}
+
 	// TODO: Parse the fetched opcode
 }
 
