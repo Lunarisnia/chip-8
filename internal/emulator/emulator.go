@@ -7,11 +7,12 @@ import (
 )
 
 const START_ADDR = 0x200
+const FONT_START_ADDR = 0x050
 
 type Chip8 struct {
 	Memory        [4096]byte
 	Stack         memory.Stack
-	DisplayBuffer [2048]bool
+	DisplayBuffer [32][64]bool
 	Registers     [16]byte
 	DelayTimer    byte
 	SoundTimer    byte
@@ -24,7 +25,7 @@ func New() *Chip8 {
 	return &Chip8{
 		Memory:        [4096]byte{},
 		Stack:         memory.NewStack(),
-		DisplayBuffer: [2048]bool{},
+		DisplayBuffer: [32][64]bool{},
 		Registers:     [16]byte{},
 		Keypad:        [16]byte{},
 		PC:            START_ADDR,
@@ -70,7 +71,7 @@ func (c *Chip8) decode(opcode uint16) {
 	case 0x0:
 		code := opcode & 0x0FFF
 		if code == 0x0E0 {
-			c.DisplayBuffer = [2048]bool{}
+			c.DisplayBuffer = [32][64]bool{}
 		}
 	case 0x1: // Jump
 		jumpAddr := opcode & 0x0FFF
@@ -92,17 +93,25 @@ func (c *Chip8) decode(opcode uint16) {
 		xAddr := opcode & 0x0F00 >> 8
 		yAddr := opcode & 0x00F0 >> 4
 
-		xCoord := c.Registers[xAddr]
-		yCoord := c.Registers[yAddr]
-		value := byte(opcode & 0x000F)
+		w, h := c.DisplayResolution()
+		xCoord := c.Registers[xAddr] % byte(w)
+		yCoord := c.Registers[yAddr] % byte(h)
+		c.Registers[0xF] = 0
+		value := uint16(opcode & 0x000F)
+
+		// sprite := c.Memory[c.IR+value]
+		// if on := c.DisplayBuffer[yCoord][xCoord]; on {
+		// 	c.Registers[0xF] = 1
+		// }
+
+		// TODO: Parse the fetched opcode
 		_, _, _ = xCoord, yCoord, value
 	}
 
-	// TODO: Parse the fetched opcode
 }
 
 func (c *Chip8) initFonts() {
-	addr := 0x050
+	addr := FONT_START_ADDR
 	for _, pack := range font.FontPacks {
 		for _, f := range pack {
 			c.Memory[addr] = f

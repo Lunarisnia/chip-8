@@ -30,28 +30,26 @@ func NewEngine() (*Engine, error) {
 
 func (e *Engine) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyA) {
-		e.chip8.DisplayBuffer[e.pixelCount] = false
+		e.chip8.DisplayBuffer[e.pixelCount][e.pixelCount] = false
 		e.pixelCount--
-		e.chip8.DisplayBuffer[e.pixelCount] = true
+		e.chip8.DisplayBuffer[e.pixelCount][e.pixelCount] = true
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyD) {
-		e.chip8.DisplayBuffer[e.pixelCount] = false
+		e.chip8.DisplayBuffer[e.pixelCount][e.pixelCount] = false
 		e.pixelCount++
-		e.chip8.DisplayBuffer[e.pixelCount] = true
+		e.chip8.DisplayBuffer[e.pixelCount][e.pixelCount] = true
 	}
 	return nil
 }
 
 func (e *Engine) Draw(screen *ebiten.Image) {
-	w, _ := e.chip8.DisplayResolution()
-	for i, on := range e.chip8.DisplayBuffer {
-		if !on {
-			continue
+	for y, xRows := range e.chip8.DisplayBuffer {
+		for x, on := range xRows {
+			if !on {
+				continue
+			}
+			vector.FillRect(screen, float32(10*x), float32(10*y), 10, 10, color.White, false)
 		}
-		x := i % w
-		y := i / w
-
-		vector.FillRect(screen, float32(10*x), float32(10*y), 10, 10, color.White, false)
 	}
 }
 
