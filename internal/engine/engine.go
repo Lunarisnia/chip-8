@@ -5,41 +5,20 @@ import (
 
 	"github.com/Lunarisnia/chip-8/internal/emulator"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 type Engine struct {
 	chip8 *emulator.Chip8
-
-	pixelCount int
 }
 
-func NewEngine() (*Engine, error) {
-	chip8 := emulator.New()
-	chip8.Init()
-	err := chip8.LoadROM("./testroms/1-chip8-logo.ch8")
-	if err != nil {
-		return nil, err
-	}
+func NewEngine(emulator *emulator.Chip8) (*Engine, error) {
 	return &Engine{
-		chip8:      chip8,
-		pixelCount: 240,
+		chip8: emulator,
 	}, nil
 }
 
 func (e *Engine) Update() error {
-	if inpututil.IsKeyJustPressed(ebiten.KeyA) {
-		e.chip8.DisplayBuffer[e.pixelCount][e.pixelCount] = false
-		e.pixelCount--
-		e.chip8.DisplayBuffer[e.pixelCount][e.pixelCount] = true
-	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyD) {
-		e.chip8.DisplayBuffer[e.pixelCount][e.pixelCount] = false
-		e.pixelCount++
-		e.chip8.DisplayBuffer[e.pixelCount][e.pixelCount] = true
-	}
-
 	e.chip8.Step()
 	return nil
 }
