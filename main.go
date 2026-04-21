@@ -7,6 +7,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+// TODO: Test with another more complete test roms
+
 func main() {
 	gameEngine, err := engine.NewEngine()
 	if err != nil {

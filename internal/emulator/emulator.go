@@ -76,20 +76,18 @@ func (c *Chip8) decode(opcode uint16) {
 	case 0x1: // Jump
 		jumpAddr := opcode & 0x0FFF
 		c.PC = jumpAddr
-		// fmt.Printf("%d", jumpAddr)
 	case 0x6: // Set Register VX
 		xAddr := opcode & 0x0F00 >> 8
 		xValue := byte(opcode & 0x00FF)
-		// fmt.Printf("Addr: %v\nXValue: %v\nAddrBin: %016b\n", xAddr, xValue, xAddr)
 		c.Registers[xAddr] = xValue
-	case 0x7:
+	case 0x7: // Add Register VX
 		xAddr := opcode & 0x0F00 >> 8
 		xValue := byte(opcode & 0x00FF)
 		c.Registers[xAddr] += xValue
-	case 0xA:
+	case 0xA: // Point Index to addr
 		indexAddr := opcode & 0x0FFF
 		c.IR = indexAddr
-	case 0xD:
+	case 0xD: // Draw
 		xAddr := opcode & 0x0F00 >> 8
 		yAddr := opcode & 0x00F0 >> 4
 
@@ -108,7 +106,6 @@ func (c *Chip8) decode(opcode uint16) {
 				if currentY >= byte(h) || xCoord >= byte(w) {
 					break
 				}
-				// fmt.Println(signal, "--")
 				if on := c.DisplayBuffer[currentY][xCoord+byte(i)]; on && signal == 1 {
 					c.DisplayBuffer[currentY][xCoord+byte(i)] = false
 					c.Registers[0xF] = 1
