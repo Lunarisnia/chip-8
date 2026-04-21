@@ -18,7 +18,7 @@ type Engine struct {
 func NewEngine() (*Engine, error) {
 	chip8 := emulator.New()
 	chip8.Init()
-	err := chip8.LoadROM("./testroms/IBM-logo.ch8")
+	err := chip8.LoadROM("./testroms/1-chip8-logo.ch8")
 	if err != nil {
 		return nil, err
 	}
@@ -39,6 +39,8 @@ func (e *Engine) Update() error {
 		e.pixelCount++
 		e.chip8.DisplayBuffer[e.pixelCount][e.pixelCount] = true
 	}
+
+	e.chip8.Step()
 	return nil
 }
 

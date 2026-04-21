@@ -99,15 +99,25 @@ func (c *Chip8) decode(opcode uint16) {
 		c.Registers[0xF] = 0
 		value := uint16(opcode & 0x000F)
 
-		// sprite := c.Memory[c.IR+value]
-		// if on := c.DisplayBuffer[yCoord][xCoord]; on {
-		// 	c.Registers[0xF] = 1
-		// }
-
-		// TODO: Parse the fetched opcode
-		_, _, _ = xCoord, yCoord, value
+		for row := range value {
+			sprite := c.Memory[c.IR+row]
+			for i := range 8 {
+				mask := byte(0b1000_0000) >> byte(i)
+				signal := (sprite & mask) >> byte(7-i)
+				currentY := yCoord + byte(row)
+				if currentY >= byte(h) || xCoord >= byte(w) {
+					break
+				}
+				// fmt.Println(signal, "--")
+				if on := c.DisplayBuffer[currentY][xCoord+byte(i)]; on && signal == 1 {
+					c.DisplayBuffer[currentY][xCoord+byte(i)] = false
+					c.Registers[0xF] = 1
+				} else if signal == 1 {
+					c.DisplayBuffer[currentY][xCoord+byte(i)] = true
+				}
+			}
+		}
 	}
-
 }
 
 func (c *Chip8) initFonts() {
